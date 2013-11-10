@@ -1,0 +1,114 @@
+<html>
+<head>
+<!-- 
+	Dmitry K Andrievsky
+	based on http://port4me.net/game_swf.php?game=9638
+	06 Nov 2013
+-->
+<style>
+    * { -webkit-tap-highlight-color:rgba(0,0,0,0); }
+</style>
+
+	<script type="text/javascript" src="game.js">
+	</script>
+
+	<script type='text/javascript'>
+	var game;
+	function run(){
+		//alert('run');
+		var levels = [
+			 "level_01", "level_02", "level_03"
+			,"level_04", "level_05","level_06"
+			,"level_07", "level_08","level_09"
+			,"level_10", "level_11","level_12"
+			,"level_13", "level_14","level_15"
+			,"level_16", "level_17"
+			];
+		var c = document.getElementById("game");
+		game = new TheGame(c, levels);
+		game.moveFinishedHandler = onMoveFinish;
+		game.gameStartedHandler = onGameStart;
+		game.start();
+		bindKeys();
+	}
+	function onMoveFinish(g){
+		document.getElementById('mcnt').innerHTML = g.movesCounter;
+	}
+	function onGameStart(g){
+		var levSelect = document.getElementById('levels');
+		levSelect.options = new Array();
+		for (l=0; l<g.levels.length; l++)
+		{
+			var opt = new Option(" " + g.levels[l]["name"] + " ", l);
+			if (l == g.currentLevel)
+			{
+				opt.selected = true;
+			}
+			//opt.style="padding-left: 5px; padding-right: 5px;";
+			levSelect.options[levSelect.options.length] = opt;
+		}
+		onMoveFinish(g);
+	}
+	function bindKeys(){
+		document.onkeydown = function (e){
+			var code = e.keyCode;
+			//alert('code: ' + code)
+			switch (code) {
+				case 37: game.move('L'); break; //Left key
+				case 38: game.move('U'); break; //Up key
+				case 39: game.move('R'); break; //Right key
+				case 40: game.move('D'); break; //Down key
+				default: ; //Everything else
+			}
+		}	
+	}
+	</script>
+
+
+
+</head>
+<body onLoad="run();">
+<table border=0>
+<tr>
+<td>
+	<b>Boxes puzzle</b><br/> 
+	HTML5 imitation of <a 
+		href="http://www.donpixel.com/play/050727062440/"
+		target="blank"
+		>Box Up puzzle by Nick Kouvaris</a>
+</td>
+</tr>
+<tr>
+<td style="padding-left: 10px;">
+	<input type="button" value="reset" onClick="game.ResetLevel();">
+	<select 
+		id="levels" 
+		onChange="game.GotoLevel(this.options[this.selectedIndex].value);"
+		style="padding-left: 5px; padding-right: 5px;"
+		></select>
+	moves: <b><span id="mcnt"></span></b>
+</td>
+</tr>
+<tr>
+<td>
+	<canvas id="game" width="600" height="600"></canvas>
+</td>
+</tr>
+<td style="padding-left: 10px;">
+	<table>
+	<tr>
+		<td></td><td><input type="button" value="^" onClick="game.move('U');"></td><td></td>
+	</tr><tr>
+		<td><input type="button" value="<" onClick="game.move('L')";></td>
+		<td><input type="button" value="\/" onClick="game.move('D');"></td>
+		<td><input type="button" value=">" onClick="game.move('R');"></td>
+	</tr>
+	</table>
+
+</td>
+</tr>
+</table>
+
+
+</body>
+</html>

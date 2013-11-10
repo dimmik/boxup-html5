@@ -36,7 +36,10 @@
 	}
 	function onGameStart(g){
 		var levSelect = document.getElementById('levels');
-		levSelect.options = new Array();
+		while (levSelect.options.length)
+		{
+			levSelect.options.remove(0);
+		}
 		for (l=0; l<g.levels.length; l++)
 		{
 			var opt = new Option(" " + g.levels[l]["name"] + " ", l);
@@ -58,7 +61,8 @@
 				case 38: game.move('U'); break; //Up key
 				case 39: game.move('R'); break; //Right key
 				case 40: game.move('D'); break; //Down key
-				default: ; //Everything else
+				case 82: game.ResetLevel(); break; // r
+				default: ;//alert(code); //Everything else
 			}
 		}	
 	}

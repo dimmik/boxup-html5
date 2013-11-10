@@ -318,6 +318,33 @@ var currGame;
 			return;
 		}
 		// ok, moving the all the stuff
+		this.moveContent(this.dotX, this.dotY, newX, newY, toMove);
+
+		//this.reDraw(this.dotX, this.dotY);
+		//this.reDraw(newX, newY);
+		// for undo
+		this.moves[this.moves.length] = {
+			"from" : {"x": this.dotX, "y": this.dotY}, 
+			"to": {"x" : newX, "y": newY}, 
+			"content": toMove};
+
+		this.dotX = newX;
+		this.dotY = newY;
+
+		this.movesCounter ++;
+
+		if (typeof this.moveFinishedHandler != "undefined")
+		{
+			this.moveFinishedHandler(this);
+		}
+
+		this.checkLevelEnd();
+		//alert('move dx = ' + this.dotX + ' dy = ' + this.dotY);
+	}
+	
+	TheGame.prototype.moveContent = function(fromX, fromY, toX, toY, toMove){
+		var curCell = this.field[fromX][fromY];
+		var tCell = this.field[toX][toY];
 		for (j=0; j<toMove.length; j++)
 		{
 			for (i=0; i<curCell.length; i++)
@@ -329,21 +356,8 @@ var currGame;
 				}
 			}
 		}
-
-		this.reDraw(this.dotX, this.dotY);
-		this.reDraw(newX, newY);
-		this.dotX = newX;
-		this.dotY = newY;
-
-		this.movesCounter ++;
-		
-		if (typeof this.moveFinishedHandler != "undefined")
-		{
-			this.moveFinishedHandler(this);
-		}
-
-		this.checkLevelEnd();
-		//alert('move dx = ' + this.dotX + ' dy = ' + this.dotY);
+		this.reDraw(fromX, fromY)
+		this.reDraw(toX, toY)
 	}
 
 	TheGame.prototype.checkLevelEnd = function(){
@@ -468,12 +482,38 @@ var currGame;
 		}
 	}
 
+	TheGame.prototype.undo = function(){
+		if (this.moves.length == 0)
+		{
+			return;
+		}
+		var lastMoveIdx = this.moves.length - 1;
+		var mv = this.moves[lastMoveIdx];
+		//alert("mv: " + mv["from"]["x"]);
+		this.moveContent(
+				mv["to"]["x"],
+				mv["to"]["y"],
+				mv["from"]["x"],
+				mv["from"]["y"],
+				mv["content"]
+			);
+		this.dotX = mv["from"]["x"];
+		this.dotY = mv["from"]["y"];
+		this.moves.splice(lastMoveIdx, 1);
+		this.movesCounter --;
+		if (typeof this.moveFinishedHandler != "undefined")
+		{
+			this.moveFinishedHandler(this);
+		}
+	}
+
 	TheGame.prototype.start = function(){
 		this.stopped = false;
 		this.setGridSide(100);
 		this.initField();
 		this.canvas.addEventListener("click", this.onclick, false);
 		this.movesCounter = 0;
+		this.moves = new Array();
 		if (typeof this.gameStartedHandler != "undefined")
 		{
 			this.gameStartedHandler(this);

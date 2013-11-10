@@ -68,6 +68,7 @@
 				case 39: game.move('R'); break; //Right key
 				case 40: game.move('D'); break; //Down key
 				case 82: game.ResetLevel(); break; // r
+				case 85: game.undo(); break; // r
 				default: ;//alert(code); //Everything else
 			}
 		}	
@@ -97,6 +98,7 @@
 		style="padding-left: 5px; padding-right: 5px;"
 		></select>
 	moves: <b><span id="mcnt"></span></b>
+	<input type="button" value="undo" onClick="game.undo();">
 </td>
 </tr>
 <tr>

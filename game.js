@@ -111,7 +111,7 @@ var currGame;
 			(this.side) * (this.dimX - 1),
 			(this.side) * (this.dimY - 1)
 			);
-		ctx.fillStyle = "rgb(0,0,0)";
+		ctx.fillStyle = "rgb(34,139,34)";
 		ctx.font="20px Arial";
 		ctx.fillText(this.levels[this.currentLevel]["name"] + " finished.",
 			this.side / 2 + this.side / 5,

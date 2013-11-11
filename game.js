@@ -11,6 +11,7 @@ version history
 */
 
 var currGame;
+// game construction
 	function TheGame(canvas, levels) {
 		this.canvas = canvas;
 		//this.levels = levels; //
@@ -101,39 +102,7 @@ var currGame;
 		}
     }
 
-	TheGame.prototype.drawEndLevel = function(){
-		var ctx = this.canvas.getContext("2d");
-		var style = "rgba(50, 50, 50, 0.3)";
-		ctx.fillStyle=style;
-		ctx.fillRect(
-			this.side / 2,
-			this.side / 2,
-			(this.side) * (this.dimX - 1),
-			(this.side) * (this.dimY - 1)
-			);
-		ctx.fillStyle = "rgb(34,139,34)";
-		ctx.font="20px Arial";
-		ctx.fillText(this.levels[this.currentLevel]["name"] + " finished.",
-			this.side / 2 + this.side / 5,
-			this.side / 2 + this.side / 2
-			);
-	}
-
-	TheGame.prototype.drawElems = function(ctx, x, y, defs) { // defs - array
-		// clean
-		ctx.fillStyle = "rgb(255, 255, 255)";
-		ctx.fillRect(
-			x * this.side + 1,
-			y * this.side + 1,
-			this.side - 1,
-			this.side - 1
-			);
-		for (k = 0; k < defs.length; k++)
-		{
-			this.drawSingleElem(ctx, x, y, defs[k]);
-		}
-	}
-
+// drawing
 	TheGame.prototype.drawSingleElem = function(ctx, x, y, def){
 		if (def == "DT")
 		{
@@ -204,11 +173,86 @@ var currGame;
 	
 	}
 
+	TheGame.prototype.drawElems = function(ctx, x, y, defs) { // defs - array
+		// clean
+		ctx.fillStyle = "rgb(255, 255, 255)";
+		ctx.fillRect(
+			x * this.side + 1,
+			y * this.side + 1,
+			this.side - 1,
+			this.side - 1
+			);
+		for (k = 0; k < defs.length; k++)
+		{
+			this.drawSingleElem(ctx, x, y, defs[k]);
+		}
+	}
+
 	TheGame.prototype.reDraw = function(x, y){
 		var ctx = this.canvas.getContext("2d");
 		this.drawElems(ctx, x, y, this.field[x][y]);
 	}
-	
+
+	TheGame.prototype.drawEndLevel = function(){
+		var ctx = this.canvas.getContext("2d");
+		var style = "rgba(50, 50, 50, 0.3)";
+		ctx.fillStyle=style;
+		ctx.fillRect(
+			this.side / 2,
+			this.side / 2,
+			(this.side) * (this.dimX - 1),
+			(this.side) * (this.dimY - 1)
+			);
+		ctx.fillStyle = "rgb(34,139,34)";
+		ctx.font="20px Arial";
+		ctx.fillText(this.levels[this.currentLevel]["name"] + " finished.",
+			this.side / 2 + this.side / 5,
+			this.side / 2 + this.side / 2
+			);
+	}
+
+// Level navigation
+	TheGame.prototype.NextLevel = function(){
+		//alert("fields: " + this.fields.length);
+		if (this.currentLevel < (this.levels.length - 1))
+		{
+			this.currentLevel ++;
+			this.SetField(this.levels[this.currentLevel]["data"]);
+			this.start();
+		} else {
+			this.GotoLevel(0);
+		}
+	}
+
+	TheGame.prototype.ResetLevel = function(){
+		this.SetField(this.levels[this.currentLevel]["data"]);
+		this.start();
+	}
+	TheGame.prototype.GotoLevel = function(l){
+		if (l < this.levels.length && l >= 0)
+		{
+			this.currentLevel = l;
+			this.SetField(this.levels[this.currentLevel]["data"]);
+			this.start();
+		} else {
+			alert("No such level: " + l + " range: 0 - " + (this.levels.length - 1));
+		}
+	}
+
+// game itself
+	TheGame.prototype.start = function(){
+		this.stopped = false;
+		this.setGridSide(100);
+		this.initField();
+		this.canvas.addEventListener("click", this.onclick, false);
+		this.movesCounter = 0;
+		this.moves = new Array();
+		if (typeof this.gameStartedHandler != "undefined")
+		{
+			this.gameStartedHandler(this);
+		}
+	}
+
 	TheGame.prototype.move = function(dir){
 		if (this.stopped)
 		{
@@ -340,7 +384,7 @@ var currGame;
 
 		this.checkLevelEnd();
 		//alert('move dx = ' + this.dotX + ' dy = ' + this.dotY);
-	}
+	} // move
 	
 	TheGame.prototype.moveContent = function(fromX, fromY, toX, toY, toMove){
 		var curCell = this.field[fromX][fromY];
@@ -358,7 +402,7 @@ var currGame;
 		}
 		this.reDraw(fromX, fromY)
 		this.reDraw(toX, toY)
-	}
+	} // moveContent
 
 	TheGame.prototype.checkLevelEnd = function(){
 //		alert('check');
@@ -382,7 +426,7 @@ var currGame;
 			}
 	}
 
-// moving dot with mouse click
+	// moving dot with mouse click
 	TheGame.prototype.onclick = function(e){
 		//alert("mc");
 		var mouseX, mouseY;
@@ -455,32 +499,6 @@ var currGame;
 	}
 
 	
-	TheGame.prototype.NextLevel = function(){
-		//alert("fields: " + this.fields.length);
-		if (this.currentLevel < (this.levels.length - 1))
-		{
-			this.currentLevel ++;
-			this.SetField(this.levels[this.currentLevel]["data"]);
-			this.start();
-		} else {
-			this.GotoLevel(0);
-		}
-	}
-
-	TheGame.prototype.ResetLevel = function(){
-		this.SetField(this.levels[this.currentLevel]["data"]);
-		this.start();
-	}
-	TheGame.prototype.GotoLevel = function(l){
-		if (l < this.levels.length && l >= 0)
-		{
-			this.currentLevel = l;
-			this.SetField(this.levels[this.currentLevel]["data"]);
-			this.start();
-		} else {
-			alert("No such level: " + l + " range: 0 - " + (this.levels.length - 1));
-		}
-	}
 
 	TheGame.prototype.undo = function(){
 		if (this.moves.length == 0)
@@ -504,19 +522,6 @@ var currGame;
 		if (typeof this.moveFinishedHandler != "undefined")
 		{
 			this.moveFinishedHandler(this);
-		}
-	}
-
-	TheGame.prototype.start = function(){
-		this.stopped = false;
-		this.setGridSide(100);
-		this.initField();
-		this.canvas.addEventListener("click", this.onclick, false);
-		this.movesCounter = 0;
-		this.moves = new Array();
-		if (typeof this.gameStartedHandler != "undefined")
-		{
-			this.gameStartedHandler(this);
 		}
 	}
 

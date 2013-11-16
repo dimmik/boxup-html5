@@ -39,9 +39,32 @@
 		game = new TheGame(c, levels);
 		game.moveFinishedHandler = onMoveFinish;
 		game.gameStartedHandler = onGameStart;
-		game.start();
+		//game.start();
 		bindKeys();
+		GotoLevelFromURL();
 	}
+	function GotoLevelFromURL(){
+		var url = document.URL;
+		var idx = url.indexOf("#")
+		var level = idx != -1 ? url.substring(idx+1) : "";
+		var chosen_level = -1;
+		
+		for (ll=0; ll<game.levels.length; ll++)
+		{
+			if (game.levels[ll]["name"] == level)
+			{
+				chosen_level = ll;
+			}
+		}
+		//alert(chosen_level);
+		if (chosen_level != -1)
+		{
+			game.GotoLevel(chosen_level);
+		} else {
+			game.GotoLevel(0);
+		}
+	}
+	
 	function onMoveFinish(g){
 		document.getElementById('mcnt').innerHTML = g.movesCounter;
 	}

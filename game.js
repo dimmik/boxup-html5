@@ -251,6 +251,9 @@ var currGame;
 		{
 			this.gameStartedHandler(this);
 		}
+    var hash = this.levels[this.currentLevel]["name"];
+    //alert('hash: ' + hash);
+    window.location.hash = hash;
 	}
 
 	TheGame.prototype.move = function(dir){

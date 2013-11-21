@@ -68,7 +68,7 @@ var currGame;
 			x=w.innerWidth||e.clientWidth||g.clientWidth,
 			y=w.innerHeight||e.clientHeight||g.clientHeight;
 		var sX = Math.floor((x - 20)/this.dimX);
-		var sY = Math.floor((y - 20)/this.dimY);
+		var sY = Math.floor((y - 300)/this.dimY);
 		var ss = sX > sY ? sY : sX;
 		//alert('x: ' + sX + ' y: ' + sY + ' ss: ' + ss);
 		this.side = ss > maxGridSide ? maxGridSide : ss;

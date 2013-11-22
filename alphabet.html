@@ -1,0 +1,120 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Алфавит</title>
+<style>
+
+  body{
+	padding: 5% 10% 5% 10%;
+}
+  #buttons{
+}
+  table{
+	text-align:left;
+    border: 1px #ae186d;
+    border-style: dotted;
+    margin: 10px;
+	display: inline-block;
+  }
+.td1{
+    padding: 0 0px 0 10px; 
+    width:60px;
+}  
+.td2{
+	width:110px;
+	padding: 0 3px 0 3px;
+	height:30px;
+}
+p{
+	-webkit-margin-before: 2px;
+	-webkit-margin-after: 2px;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+	font-family: helvetica, arial, sans-serif;
+}
+p span{
+	color:#ae186d;
+	font-weight:bold;
+}
+.p1{
+	color:#ae186d;
+    font-size: 28px;
+    font-weight:bold;
+}
+.p2{
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+	  <div id="buttons"></div>
+	  <audio preload>
+		  <source src="AlfabitSlova1.mp3" type="audio/mp3"></source>
+		  <source src="AlfabitSlova1.ogg" type="audio/ogg"></source>
+	  </audio>
+<script>
+var a = document.querySelector('audio'),
+    buttoncontainer = document.querySelector('#buttons'),
+    audiosprite = {
+	'A': [ 0, 0.5, 'Aа', 0, 0.45, '<span>а</span>втор', 1, 1.45, 'бр<span>а</span>т'],
+	'B' : [ 0, 0.45, 'Бб', 0, 0.45, 'банк', 0, 0.45, 'проблема'],
+	'V' : [ 0, 0.45, 'Вв', 0, 0.45, 'ваза', 0, 0.45, 'квартира'],
+	'G' : [ 0, 0.45, 'Гг', 0, 0.45, 'город', 0, 0.45, 'книга'],
+	'D' : [ 0, 0.45, 'Дд', 0, 0.45, 'дом', 0, 0.45, 'до&nbsp;свидания'],
+	'E' : [ 0, 0.45, 'Ее', 0, 0.45, 'ехать', 0, 0.45, 'документ'],
+	'YO' : [ 0, 0.45, 'Ёё', 0, 0.45, 'ёлка', 0, 0.45, 'ребёнок'],
+	'ZH' : [ 0, 0.45, 'Жж', 0, 0.45, 'журнал', 0, 0.45, 'пожалуйста'],
+	'Z' : [ 0, 0.45, 'Зз', 0, 0.45, 'зал', 0, 0.45, 'музыка'],
+	'I' : [ 0, 0.45, 'Ии', 0, 0.45, 'игрушка', 0, 0.45, 'институт'],
+	'J' : [ 0, 0.45, 'Йй', 0, 0.45, 'йогурт', 0, 0.45, 'май'],
+	'K' : [ 0, 0.45, 'Кк', 0, 0.45, 'кафе', 0, 0.45, 'кошка'],
+	'L' : [ 0, 0.45, 'Лл', 0, 0.45, 'лампа', 0, 0.45, 'пожалуйста'],
+	'M' : [ 0, 0.45, 'Мм', 0, 0.45, 'мама', 0, 0.45, 'письмо'],
+	'N' : [ 0, 0.45, 'Нн', 0, 0.45, 'номер', 0, 0.45, 'страна'],
+	'O' : [ 0, 0.45, 'Оо', 0, 0.45, 'опера', 0, 0.45, 'полка'],
+	'P' : [ 0, 0.45, 'Пп', 0, 0.45, 'папа', 0, 0.45, 'спасибо'],
+	'R' : [ 0, 0.45, 'Рр', 0, 0.45, 'радио', 0, 0.45, 'культура'],
+	'S' : [ 0, 0.45, 'Сс', 0, 0.45, 'сын', 0, 0.45, 'такси'],
+	'T' : [ 0, 0.45, 'Тт', 0, 0.45, 'турист', 0, 0.45, 'ресторан'],
+	'U' : [ 0, 0.45, 'Уу', 0, 0.45, 'университет', 0, 0.45, 'сувенир'],
+	'F' : [ 0, 0.45, 'Фф', 0, 0.45, 'факультет', 0, 0.45, 'телефон'],
+	'H' : [ 0, 0.45, 'Хх', 0, 0.45, 'холодильник', 0, 0.45, 'кухня'],
+	'C' : [ 0, 0.45, 'Цц', 0, 0.45, 'цунами', 0, 0.45, 'полиция'],
+	'CH' : [ 0, 0.45, 'Чч', 0, 0.45, 'часы', 0, 0.45, 'дача'],
+	'SH' : [ 0, 0.45, 'Шш', 0, 0.45, 'шесть', 0, 0.45, 'кошка'],
+	'SCH' : [ 0, 0.45, 'Щщ', 0, 0.45, 'щётка', 0, 0.45, 'женщина'],
+	'TVZ' : [ 0, 0.45, 'ъ', 0, 0.45, '-', 0, 0.45, 'подъезд'],
+	'Y' : [ 0, 0.45, 'ы', 0, 0.45, '-', 0, 0.45, 'сыр'],
+	'MZN' : [ 0, 0.45, 'ь', 0, 0.45, '-', 0, 0.45, 'компьютер'],
+	'YE' : [ 0, 0.45, 'Ээ', 0, 0.45, 'этап', 0, 0.45, 'поэзия'],
+	'YU' : [ 0, 0.45, 'Юю', 0, 0.45, 'юбка', 0, 0.45, 'июль'],
+	'YA' : [ 0, 0.45, 'Яя', 0, 0.45, 'я', 0, 0.45, 'пять']
+    },
+    end = 0;
+
+a.addEventListener('loadeddata', function(ev) {
+	var str = "";
+  for (var i in audiosprite) {
+//    alert(i);
+    str += '<table align="center"><tr><td class="td1" rowspan="2"><p class="p1" onmouseover="play(\'' + i + '\',0)">' + audiosprite[i][2] + '</td><td class="td2"><p class="p2" onmouseover="play(\'' + i + '\',1)">' + audiosprite[i][5] + '</td></tr><tr><td class="td2"><p class="p2" onmouseover="play(\'' + i + '\',2)">' + audiosprite[i][8] + '</td></tr></table>';
+  }
+	buttoncontainer.innerHTML = '<center>' + str + '</center>';
+}, false);
+
+
+a.addEventListener('timeupdate', function(ev) {
+  if (a.currentTime > end) {
+    a.pause();
+  }
+},false);
+
+function play(sound,place) {
+  if ( audiosprite[sound] ) {
+    a.currentTime = audiosprite[sound][place*3];
+    end = audiosprite[sound][place*3+1];
+    a.play();
+  }
+}
+</script>
+</body>
+</html>

@@ -12,23 +12,28 @@ version history
 
 var currGame;
 // game construction
-	function TheGame(canvas, levels) {
+	function TheGame(canvas) {
 		this.canvas = canvas;
-		//this.levels = levels; //
+		this.fields = new Array();
 		this.levels = new Array();
 		this.currentLevel = 0;
+	}
+	TheGame.prototype.init = async function(levels, infoDiv){
+		
 		//alert("levels: " + levels);
 		for (t=0; t<levels.length; t++)
 		{
 			this.levels[t] = {};
 			this.levels[t]["name"] = levels[t];
-			this.levels[t]["data"] = loadLevel(levels[t]);
-			//alert("t: " + t + " fields: " + this.fields[t]);
+			this.levels[t]["data"] = await loadLevel(levels[t]);
+			//alert("t: " + t + " levels: " + this.levels[t] + " data: " + this.levels[t]["data"] + " ......" + this.levels[this.currentLevel]["data"]);
+			infoDiv.innerHTML = "level " + levels[t] + " loaded<br/>" + infoDiv.innerHTML
 		}
 		//alert("fields: " + this.fields.length);
 		this.SetField(this.levels[this.currentLevel]["data"]);
 		this.stopped = true;
 		currGame = this;
+		infoDiv.style.display = 'none';
 	}
 
 	TheGame.prototype.SetField = function(f) {
@@ -36,9 +41,11 @@ var currGame;
 		for (i=0; i<f.length; i++)
 		{
 			this.field[i] = new Array();
+			//alert("f[i].length = " + f[i].length);
 			for (j=0; j<f[i].length; j++)
 			{
 				this.field[i][j] = new Array();
+				//alert(i + ", " + j + " =>" + f[i][j]);
 				for (k=0; k<f[i][j].length; k++)
 				{
 					this.field[i][j][k] = f[i][j][k];
@@ -564,67 +571,77 @@ function getXmlHttp(){
   return xmlhttp;
 }
 
-function loadLevel(levelName){
-	var xmlhttp = getXmlHttp()
-	xmlhttp.open('GET', levelName, false);
-	try {
-		xmlhttp.send(null);
-	} catch {
-		alert("Cannot load level " + levelName);
-	}
+function loadLevelFromTxt(text){
 	var field = new Array();
-	if(xmlhttp.status == 200) {
-		var text = xmlhttp.responseText;
-		var lines = text.split("\n");
-		//alert(lines);
-		var lnnum = 0;
-		for (i=0; i<lines.length; i++)
+	var lines = text.split("\n");
+	//alert(lines);
+	var lnnum = 0;
+	for (i=0; i<lines.length; i++)
+	{
+		var line = lines[i];
+		if (line.charAt(0) != ';' && line.length > 0) // ;... -comments
 		{
-			var line = lines[i];
-			if (line.charAt(0) != ';') // ;... -comments
+			field[lnnum] = new Array();
+			var chars = line.split("");
+			//alert('chars: ' + chars);
+			for (j=0; j<chars.length; j++)
 			{
-				field[lnnum] = new Array();
-				var chars = line.split("");
-				//alert('chars: ' + chars);
-				for (j=0; j<chars.length; j++)
-				{
 //;. - dot; cC, uU, nN, dD - black boxes (small and big); ^<>_ - subject (red box); LRMW - target (blue box)
-
-					switch (chars[j])
-					{
-					case '.': field[lnnum][j] = ['DT']; break;
-					case 'X': field[lnnum][j] = ['BL']; break;
-					
-					case 'c': field[lnnum][j] = ['LE']; break;
-					case 'u': field[lnnum][j] = ['LN']; break;
-					case 'n': field[lnnum][j] = ['LS']; break;
-					case 'd': field[lnnum][j] = ['LW']; break;
-					
-					case 'C': field[lnnum][j] = ['BE']; break;
-					case 'U': field[lnnum][j] = ['BN']; break;
-					case 'N': field[lnnum][j] = ['BS']; break;
-					case 'D': field[lnnum][j] = ['BW']; break;
-					
-					case '<': field[lnnum][j] = ['SE']; break;
-					case '_': field[lnnum][j] = ['SN']; break;
-					case '^': field[lnnum][j] = ['SS']; break;
-					case '>': field[lnnum][j] = ['SW']; break;
-					
-					case 'R': field[lnnum][j] = ['TE']; break;
-					case 'W': field[lnnum][j] = ['TN']; break;
-					case 'M': field[lnnum][j] = ['TS']; break;
-					case 'L': field[lnnum][j] = ['TW']; break;
-					
-					case '-': field[lnnum][j] = new Array(); break;
-					}
+				switch (chars[j])
+				{
+				case '.': field[lnnum][j] = ['DT']; break;
+				case 'X': field[lnnum][j] = ['BL']; break;
+				
+				case 'c': field[lnnum][j] = ['LE']; break;
+				case 'u': field[lnnum][j] = ['LN']; break;
+				case 'n': field[lnnum][j] = ['LS']; break;
+				case 'd': field[lnnum][j] = ['LW']; break;
+				
+				case 'C': field[lnnum][j] = ['BE']; break;
+				case 'U': field[lnnum][j] = ['BN']; break;
+				case 'N': field[lnnum][j] = ['BS']; break;
+				case 'D': field[lnnum][j] = ['BW']; break;
+				
+				case '<': field[lnnum][j] = ['SE']; break;
+				case '_': field[lnnum][j] = ['SN']; break;
+				case '^': field[lnnum][j] = ['SS']; break;
+				case '>': field[lnnum][j] = ['SW']; break;
+				
+				case 'R': field[lnnum][j] = ['TE']; break;
+				case 'W': field[lnnum][j] = ['TN']; break;
+				case 'M': field[lnnum][j] = ['TS']; break;
+				case 'L': field[lnnum][j] = ['TW']; break;
+				
+				case '-': field[lnnum][j] = new Array(); break;
 				}
-				lnnum ++;
 			}
+			lnnum ++;
 		}
-		//alert('field: ' + field);
-	} else {
-		alert('Error loading ' + levelName + " st: " + xmlhttp.status);
 	}
+	return field;
+}
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function loadLevel(levelName){
+	var loaded = false;
+	var field = new Array();
+	var text = "";
+	var script = document.createElement('script');
+	script.src = levelName + ".js";
+	script.onload = function () {
+		text = levelData;
+		loaded = true;
+		//alert ("loaded: " + text);
+	};
+	document.head.appendChild(script);
+	while (!loaded){
+		await sleep(300)
+	}
+	field = loadLevelFromTxt(text)		
+	
+	//alert('field: ' + field);
 	// transpose
 	if (field.length > 0)
 	{

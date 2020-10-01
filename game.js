@@ -567,7 +567,11 @@ function getXmlHttp(){
 function loadLevel(levelName){
 	var xmlhttp = getXmlHttp()
 	xmlhttp.open('GET', levelName, false);
-	xmlhttp.send(null);
+	try {
+		xmlhttp.send(null);
+	} catch {
+		alert("Cannot load level " + levelName);
+	}
 	var field = new Array();
 	if(xmlhttp.status == 200) {
 		var text = xmlhttp.responseText;

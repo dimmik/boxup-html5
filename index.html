@@ -9,7 +9,9 @@
 		09 Nov 2013: 
 			noblink when tap on canvas
 			level choosing by dropdown
-			re-"design"
+			re-design
+		01 Oct 2020:
+			Cosmetic changes
 -->
 <style>
     * { -webkit-tap-highlight-color:rgba(0,0,0,0); }
@@ -110,7 +112,7 @@
 <table border=0>
 <tr style="display: none">
 <td>
-	<b>Boxes puzzle</b><br/> 
+	<b>Box Up puzzle</b><br/> 
 	HTML5 imitation of <a 
 		href="http://www.donpixel.com/play/050727062440/"
 		target="blank"
@@ -126,7 +128,7 @@
 		onChange="game.GotoLevel(this.options[this.selectedIndex].value);"
 		style="padding-left: 5px; padding-right: 5px;"
 		></select>
-	moves: <b><span id="mcnt"></span></b>
+	Move Count: <b><span id="mcnt"></span></b>
 	<input type="button" value="undo" onClick="game.undo();">
 </td>
 </tr>

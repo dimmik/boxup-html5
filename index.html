@@ -27,7 +27,7 @@
 
 	<script type='text/javascript'>
 	var game;
-	function run(){
+	async function run(){
 		//alert('run');
 		var levels = [
 			 "level_01", "level_02", "level_03"
@@ -38,7 +38,8 @@
 			,"level_16", "level_17"
 			];
 		var c = document.getElementById("game");
-		game = new TheGame(c, levels);
+		game = new TheGame(c);
+		await game.init(levels, document.getElementById('loadingInfo'));
 		game.moveFinishedHandler = onMoveFinish;
 		game.gameStartedHandler = onGameStart;
 		//game.start();
@@ -108,7 +109,7 @@
 
 
 </head>
-<body onLoad="run();">
+<body onLoad="run();/*.then(() => alert('runned'));*/">
 <table border=0>
 <tr style="display: none">
 <td>
@@ -134,6 +135,7 @@
 </tr>
 <tr>
 <td>
+<div id="loadingInfo">Loading...</div>
 	<canvas id="game" width="600" height="600"></canvas>
 </td>
 </tr>
@@ -152,6 +154,7 @@
 
 </td>
 </tr>
+
 </table>
 </body>
 </html>
